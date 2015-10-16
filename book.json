@@ -1,13 +1,9 @@
-{"title": "Lang_OMOOC_py",
-    "version": "15.10.16,2020",
-    "description": "Lang's notes for OMOOC.py",
-    "author": "Lang",
-
-    "plugins": [
-        "disqus"
-    ],
+{
+    "plugins": ["disqus"],
     "pluginsConfig": {
-        "disqus": "penglbst"
-    }
+        "disqus": {
+            "shortName": "penglbst"
+        }
+    }  
 }
 
