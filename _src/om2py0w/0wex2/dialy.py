@@ -14,13 +14,13 @@ def main():
 	'''
 
 	modify_time = time.strftime("%b/%d/%Y %H:%M:%S")
-	content = sys.argv[1]
+	content = sys.argv[1:]
 	##content += '\n'
 	## below code use a template
 	to_write = template.format(modify_time=modify_time, content=content)
 
 
-	file = open('diary.txt', 'a+')
+	file = open('diary.txt', 'a+')## a+
 
 	file.write(to_write)
 	
