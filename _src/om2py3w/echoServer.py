@@ -11,7 +11,7 @@ sock.bind(server_address)
 
 while True:
 	print >>sys.stderr, '\nwaiting to receive message'
-	data, address = sock.recvfrom(4096)
+	data, address = sock.recvfrom(4960)
 
 	print >>sys.stderr, 'received %s bytes from %s' % (len(data), address)
 	print >>sys.stderr, data
