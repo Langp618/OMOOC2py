@@ -9,12 +9,12 @@ import sys
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
 server_address = ('localhost', 10000)
-message  = 'Hello, I am Client, Request~'
+data  = 'Hello, I am Client, Request~'
 
 try:
 	#send data
-	print >> sys.stderr, 'sending "%s"' % message
-	sent = sock.sendto(message, server_address)
+	print >> sys.stderr, 'Test server connection: "%s"' % data
+	sent = sock.sendto(data, server_address)
 
 	#Receive response
 	print >>sys.stderr, 'Waiting to receive'
@@ -23,8 +23,11 @@ try:
 
 	print >> sys.stderr, 'Good connection! Begin CMD:'
 
-	message = raw_input(">>")
-	sent = sock.sendto(message, server_address)
+	if 'Error' not in data[0]:
+		data = raw_input(">>")
+		sent = sock.sendto(message, server_address)
+	else:
+		print "Error: ", data
 
 finally:
 	print >>sys.stderr, 'Closing socket'
