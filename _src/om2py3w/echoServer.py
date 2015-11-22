@@ -1,7 +1,7 @@
 # coding=utf-8
 # OMOOC_3
-# version 1.0
-#ubuntu/lang
+# version 1.1
+# ubuntu/lang
 
 import socket
 import sys
@@ -22,6 +22,7 @@ KEYWORDS = ['a', 'l', 'e', 'i']
 def response(keyword):
 	if keyword.lowcase = 'a':
 		dairy.showHistory()
+		return 
 	elif keyword.lowcase = 'l':
 		dairy.showLine()
 	elif keyword.lowcase = 'i':
@@ -29,7 +30,7 @@ def response(keyword):
 	elif keyword.lowcase == 'e':
 		emptyDiary()
 	else: 
-		print "无效命令，请输入正确指令：\n", KEYWORDS
+		return CMDerror
 
 
 def main():
@@ -58,7 +59,8 @@ def main():
 
 		if data not in KEYWORDS:
 			print "Error input"
-			print >>sys.stderr, "Please enter command first: \n%s", KEYWORDS
+			data = "Error" + "无效命令，请输入正确指令：\n", + KEYWORDS
+			sent = sendto(data, address)
 
 		else:
 			response(data)
