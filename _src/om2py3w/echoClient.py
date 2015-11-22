@@ -20,14 +20,14 @@ try:
 	print >>sys.stderr, 'Waiting to receive'
 	data, server = sock.recvfrom(4096)
 	print >>sys.stderr, 'received "%s" from Server' % data
-
-	print >> sys.stderr, 'Good connection! Begin CMD:'
-
-	if 'Error' not in data[0]:
-		data = raw_input(">>")
-		sent = sock.sendto(message, server_address)
-	else:
-		print "Error: ", data
+	
+	if 'Begin' in data:
+		print >> sys.stderr, 'Good connection! Begin CMD:'
+		if 'Error' not in data[0]:
+			data = raw_input(">>")
+			sent = sock.sendto(message, server_address)
+		else:
+			print "Error: ", data
 
 finally:
 	print >>sys.stderr, 'Closing socket'
