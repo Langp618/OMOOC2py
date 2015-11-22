@@ -20,12 +20,12 @@ KEYWORDS = ['a', 'l', 'e', 'i']
 
 #Based on Client command input process response
 def response(keyword):
-	if keyword.lowcase = 'a':
+	if keyword.lowcase == 'a':
 		dairy.showHistory()
 		return 
-	elif keyword.lowcase = 'l':
+	elif keyword.lowcase == 'l':
 		dairy.showLine()
-	elif keyword.lowcase = 'i':
+	elif keyword.lowcase == 'i':
 		dairy.inputDiary()
 	elif keyword.lowcase == 'e':
 		emptyDiary()
