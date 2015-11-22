@@ -19,17 +19,17 @@ KEYWORDS = ['a', 'l', 'e', 'i']
 '''
 
 #Based on Client command input process response
-def response(keyword):
-	if keyword.lowcase == 'a':
-		dairy.showHistory()
-	elif keyword.lowcase == 'l':
-		dairy.showLine()
-	elif keyword.lowcase == 'i':
-		dairy.inputDiary()
-	elif keyword.lowcase == 'e':
-		emptyDiary()
+def response(keyword = Data[0]):
+	if keyword == 'a':
+		diary.showHistory()
+	elif keyword == 'l':
+		diary.showLine()
+	elif keyword == 'i':
+		diary.inputDiary()
+	elif keyword == 'e':
+		diary.emptyDiary()
 	else: 
-		return CMDerror
+		print "CMD error"
 
 
 def main():
@@ -58,15 +58,16 @@ def main():
 		
 		print "Connection! Begin CMD input\n"
 		CMD = "Begin"
-		sentCMD = sendto(CMD, address)
+		sentCMD = sock.sendto(CMD, address)
+		
 		print "Waiting CMD input from client"
-
 		data, address = sock.recvfrom(4960)
-		if data not in KEYWORDS:
+		#need make sure the input data, NOT affect the data input
+		
+		if data[0] not in KEYWORDS:
 			print "Error input"
 			data = "Error" + "无效命令，请输入正确指令：\n", + KEYWORDS
 			sent = sendto(data, address)
-
 		else:
 			response(data)
 			sent = sock.sendto(data, address)
