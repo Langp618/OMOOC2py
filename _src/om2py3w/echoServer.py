@@ -22,7 +22,6 @@ KEYWORDS = ['a', 'l', 'e', 'i']
 def response(keyword):
 	if keyword.lowcase == 'a':
 		dairy.showHistory()
-		return 
 	elif keyword.lowcase == 'l':
 		dairy.showLine()
 	elif keyword.lowcase == 'i':
@@ -35,11 +34,11 @@ def response(keyword):
 
 def main():
 	
-	#initial the daily.txt
-	# if not exit daily.txt, built
-	dairy.initDiary()
-	print "Config done!, Open Clinet, enter you command...."
-	pirnt "..."
+	#initial the diary.log
+	# if not exit diary.log, built
+	diary.initDiary()
+	print "Config done!, connect to Client, waiting CMD input..."
+	print "..."
 	print ''
 
 	#create a TCP/IP socket
@@ -56,7 +55,13 @@ def main():
 
 		print >>sys.stderr, 'received %s bytes from %s' % (len(data), address)
 		print >>sys.stderr, data
+		
+		print "Connection! Begin CMD input\n"
+		CMD = "Begin"
+		sentCMD = sendto(CMD, address)
+		print "Waiting CMD input from client"
 
+		data, address = sock.recvfrom(4960)
 		if data not in KEYWORDS:
 			print "Error input"
 			data = "Error" + "无效命令，请输入正确指令：\n", + KEYWORDS
@@ -66,3 +71,6 @@ def main():
 			response(data)
 			sent = sock.sendto(data, address)
 			print >>sys.stderr, 'sent %s bytes back to %s' % (sent, address)
+
+if __name__ == "__main__":
+	main()
