@@ -1,3 +1,7 @@
+# coding=utf-8
+# OMOOC2
+# Version 1.1
+
 import socket
 import sys
 
@@ -5,7 +9,7 @@ import sys
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
 server_address = ('localhost', 10000)
-message  = 'This is the message. It will be repeated.'
+message  = 'Hello, I am Client, Request~'
 
 try:
 	#send data
@@ -15,7 +19,12 @@ try:
 	#Receive response
 	print >>sys.stderr, 'Waiting to receive'
 	data, server = sock.recvfrom(4096)
-	print >>sys.stderr, 'received "%s"' % data
+	print >>sys.stderr, 'received "%s" from Server' % data
+
+	print >> sys.stderr, 'Good connection! Begin CMD:'
+
+	message = raw_input(">>")
+	sent = sock.sendto(message, server_address)
 
 finally:
 	print >>sys.stderr, 'Closing socket'
