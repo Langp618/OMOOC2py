@@ -1,6 +1,12 @@
+# Echo client program
+
 import socket
 
-port = 8081
-host = 'localhost'
-s=socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-s.sendto(b'Hello, this a test info !!', (host,port))
+HOST = 'daring.cwi.nl'
+PORT = 50007
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+s.connect((HOST, PORT))
+s.sendall('Hello World')
+data = s.recv(1024)
+s.close()
+print 'Received', repr(data)
