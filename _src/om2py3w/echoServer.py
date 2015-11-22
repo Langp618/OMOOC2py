@@ -5,25 +5,29 @@
 
 import socket
 import sys
-import dialy
+import os
+import diary
 
 #define keyword as CMD
-KEYWORDS = ['h/H', 's/S', 'n/N']
+KEYWORDS = ['a', 'l', 'e', 'i']
 '''
 	Below CMD from client/ and response
-	h/H = show history info and sent back to client;
-	s/S = show newest info sent back to clinet;
-	n/N = show new input input and record to daily.txt
+	a = show history info and sent back to client;
+	l = show newest info sent back to clinet;
+	i = show new input input and record to dairy.log
+	e = empty the log file
 '''
 
 #Based on Client command input process response
 def response(keyword):
-	if keyword.lowcase = 'h':
-		daily.showHistory()
-	elif keyword.lowcase = 's':
-		daily.showNewest()
-	elif keyword.lowcase = 'N':
-		daily.recordNew()
+	if keyword.lowcase = 'a':
+		dairy.showHistory()
+	elif keyword.lowcase = 'l':
+		dairy.showLine()
+	elif keyword.lowcase = 'i':
+		dairy.inputDiary()
+	elif keyword.lowcase == 'e':
+		emptyDiary()
 	else: 
 		print "无效命令，请输入正确指令：\n", KEYWORDS
 
@@ -32,7 +36,7 @@ def main():
 	
 	#initial the daily.txt
 	# if not exit daily.txt, built
-	daily.init()
+	dairy.initDiary()
 	print "Config done!, Open Clinet, enter you command...."
 	pirnt "..."
 	print ''
