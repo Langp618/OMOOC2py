@@ -19,13 +19,13 @@ KEYWORDS = ['a', 'l', 'e', 'i']
 '''
 
 #Based on Client command input process response
-def response(keyword = Data[0]):
+def response(keyword = data[1]):
 	if keyword == 'a':
 		diary.showHistory()
 	elif keyword == 'l':
 		diary.showLine()
 	elif keyword == 'i':
-		diary.inputDiary()
+		diary.inputDiary(data[-1])
 	elif keyword == 'e':
 		diary.emptyDiary()
 	else: 
@@ -53,18 +53,16 @@ def main():
 		print >>sys.stderr, '\nwaiting to receive message'
 		data, address = sock.recvfrom(4960)
 
-		print >>sys.stderr, 'received %s bytes from %s' % (len(data), address)
-		print >>sys.stderr, data
-		
-		print "Connection! Begin CMD input\n"
-		CMD = "Begin"
-		sentCMD = sock.sendto(CMD, address)
-		
+		if data[0] == "Hello"
+		print "Connection! Begin data input\n"
+		data = ['Begin']  ## init data to begin flag
+		sentCMD = sock.sendto(data, address)	
 		print "Waiting CMD input from client"
+
 		data, address = sock.recvfrom(4960)
 		#need make sure the input data, NOT affect the data input
 		
-		if data[0] not in KEYWORDS:
+		if data[1] not in KEYWORDS:
 			print "Error input"
 			data = "Error" + "无效命令，请输入正确指令：\n", + KEYWORDS
 			sent = sendto(data, address)
