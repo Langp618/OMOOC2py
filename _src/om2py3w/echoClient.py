@@ -13,7 +13,7 @@ data  = ['Hello']
 
 try:
 	#send data
-	print >> sys.stderr, 'Test server connection: "%s"' % data
+	print "Request server connection"
 	sent = sock.sendto(data, server_address)
 
 	#Receive response
@@ -21,14 +21,16 @@ try:
 	data, server = sock.recvfrom(4096)
 	print >>sys.stderr, 'received "%s" from Server' % data
 	
-	if 'Begin' in data[0]:　　　##Server change 'Hello' to 'begin'
+	if 'Begin' in data[0]:
+		##Server change 'Hello' to 'begin'
 		print >> sys.stderr, 'Good connection! Begin CMD:'
-		if 'Error' not in data[1]:  ##data[1] store CMD error flag
+		if 'Error' not in data[1]: 
+			##data[1] store CMD error flag
 			data.append(raw_input("CMD: \n"))
-			if 'i' in data[1]: ## i means need typer to input at data[-1]
+			if 'i' in data[1]:
+				## i means need typer to input at data[-1]
 				data.append(raw_input("Enter what's you save here: "))
 				sentInput = sock.sendto(data, server_address)
-
 			else:
 				sentCMD = sock.sendto(data, server_address)
 		else:
