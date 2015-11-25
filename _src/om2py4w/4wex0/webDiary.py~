@@ -7,6 +7,7 @@
 from bottle import run, template, route, debug, request
 from diary import inputDiary, showHistory
 
+@route('/')
 @route('/write')
 def write():
 	mydiary = showHistory()
@@ -19,8 +20,7 @@ def do_write():
 	mydiary = showHistory() # read out to shows
 	return template('write.tpl', diary=mydiary)
 
-'''
-@route('/hallo')
+@route('/readout')
 def readout():
 	f = open('diary.log')
 	content = f.read()

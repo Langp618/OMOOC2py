@@ -19,7 +19,8 @@ KEYWORDS = ['a', 'l', 'e', 'i']
 '''
 
 #Based on Client command input process response
-def response(keyword = data[1]):
+def response(data):
+	keyword = data[1]
 	if keyword == 'a':
 		diary.showHistory()
 	elif keyword == 'l':
@@ -53,11 +54,11 @@ def main():
 		print >>sys.stderr, '\nwaiting to receive message'
 		data, address = sock.recvfrom(4960)
 
-		if data[0] == "Hello"
-		print "Connection! Begin data input\n"
-		data = ['Begin']  ## init data to begin flag
-		sentCMD = sock.sendto(data, address)	
-		print "Waiting CMD input from client"
+		if data[0] == "Hello":
+			print "Connection! Begin data input\n"
+			data = ['Begin']  ## init data to begin flag
+			sentCMD = sock.sendto(data, address)	
+			print "Waiting CMD input from client"
 
 		data, address = sock.recvfrom(4960)
 		#need make sure the input data, NOT affect the data input

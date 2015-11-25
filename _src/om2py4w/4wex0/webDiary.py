@@ -20,14 +20,12 @@ def do_write():
 	mydiary = showHistory() # read out to shows
 	return template('write.tpl', diary=mydiary)
 
-'''
-@route('/hallo')
+@route('/readout')
 def readout():
 	f = open('diary.log')
 	content = f.read()
 	f.close()
 	return content
-'''
 
 if __name__ == '__main__':
 	debug(True)
