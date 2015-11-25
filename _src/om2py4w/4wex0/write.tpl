@@ -9,7 +9,9 @@
 			<input name="diary_log" />
 			<input value="Submit" type="submit" />
 </form>
-		<textshow col=50 row=50>{{diary}}
-		</textshow>
+
+<content col=50 row=50>
+ {{diary}}
+</content>
 </body>
 </html>

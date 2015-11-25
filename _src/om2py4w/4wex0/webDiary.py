@@ -10,8 +10,9 @@ from diary import inputDiary, showHistory
 @route('/')
 @route('/write')
 def write():
-	mydiary = showHistory()
-	return template('write.tpl', diary=mydiary)
+	mdiary = showHistory()
+	# write.tpl is template for this code
+	return template('write.tpl', diary=mdiary)
 
 @route('/write', method='POST')
 def do_write():
