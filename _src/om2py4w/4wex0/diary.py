@@ -50,9 +50,11 @@ def showHistory():
 	f = open('diary.log', 'r')
 	## r begin of files, only read
 	f.seek(0, 0)
-	print f.read()
+	fout = f.read()
+	print fout
 	f.close()
-
+	return fout
+	
 def showLine():
 	print "This function in developing"
 

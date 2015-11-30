@@ -19,6 +19,8 @@ def do_write():
 	diary_log = request.forms.get('diary_log')
 	inputDiary(diary_log) #read in
 	mydiary = showHistory() # read out to shows
+	print(mydiary)
+	print('\n')
 	return template('write.tpl', diary=mydiary)
 
 @route('/readout')
