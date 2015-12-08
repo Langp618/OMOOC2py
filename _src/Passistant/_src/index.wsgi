@@ -16,7 +16,7 @@ sys.setdefaultencoding('utf-8')
 
 from bottle import Bottle, request, route, run,template
 import sae
-import sae.kvdb  #database
+import sae.kvdb #database
 import time
 #from time import localtime, strftime
 import hashlib
@@ -56,20 +56,36 @@ def parse_xml_msg():
 	return msg
 
 ## Below is function code
-#pwd:password
-def read_pwd_keyword():
-	temp1 = [i[1] for i in list(kv.get_by_prefix("key@"))]
-	temp2 = sorted(temp1, key = lambda x:x['time'])
-	log = [temp2[i]['diary'] for i in range(len(temp2))]
-	logstr = "\n".join(log)
-	return log,logstr,temp2
+''' data sturcture
+{'keyword':keyword,'username':username,'password':password}
+'''
 
-def read_diary_tags(tags):
-	temp1 = [i[1] for i in list(kv.get_by_prefix("key@")) if tags in i[1]['tags']]
-	temp2 = sorted(temp1, key = lambda x:x['time'])
-	log = [temp2[i]['diary'] for i in range(len(temp2))]
-	return "\n".join(log)
+# wechat input 'l', then out all keyword/username list
+# in below define: countkey = "key@" + str(count)
 
+#read out all in wechat, web no read out feature
+def read_all():
+	temp = [i[1] for i in list(kv.get_by_prefix("key@"))]
+	#temp is list of input line [{'key': 'keyword'...}, ... ]
+	# list of dict out is key of dict
+	#kv.get_by_prefix is yeild: (key, value)的tuple, i[1] = value
+	#temp2 = sorted(temp1, key = lambda x:x['time'])
+	temp2 = []
+	for i in range(len(temp)):	
+		key_user =str(i) +'. ' + temp[i]['keyword'] + ':' + temp[i]['username'] 
+		i += 1
+		temp2.apend(key_suer)
+	#log = [temp2[i]['diary'] for i in range(len(temp2))]
+	return temp2 
+
+# based on keyword to read out the password
+def read_keyword(keyword):
+	temp = [i[1] for i in list(kv.get_by_prefix("key@")) if keyword in i[1]['keyword']]
+	#keys is passowrd
+	keys = [temp[i]['password'] for i in range(len(temp2))]
+	return "\n".join(keys)
+
+'''
 def write_diary_wechat(raw_diary):
 	#raw_diary = raw_diary.replace(" ","") #delete all whitespace
 	withtag_diary = raw_diary.split('#') #split diary and tags by #
@@ -85,43 +101,49 @@ def write_diary_wechat(raw_diary):
 	edit_time = strftime("%Y %b %d %H:%M", localtime())
 	diary = {'time':edit_time,'diary':newdiary,'tags':tags}
 	kv.set(countkey,diary)
+'''
 
-def write_diary_web(newdiary,tags,count):
+#write data to kvdb
+# count is order 
+def write_diary_web(keyword,username,password,count):
 	countkey = "key@" + str(count)
-	edit_time = strftime("%Y %b %d %H:%M", localtime())
-	diary = {'time':edit_time,'diary':newdiary,'tags':[tags]}
-	kv.set(countkey,diary)
-
+	#edit_time = strftime("%Y %b %d %H:%M", localtime())
+	# line 
+	line = {'keyword':keyword,'username':username,'password':password}
+	#line = {'order': count,'keyword':keyword,'username':username,'password':password}
+	kv.set(countkey,line)
 
 @app.route('/')
 def start():
-	diarylog = read_diary_all()[2]
-	return template("diarysae", diarylog=diarylog)
+#	list_key_user = read_all()
+#	return template("passistanSAE", diarylog=list_key_user )
+	return template("passistantSAE")
 
 @app.route('/', method='POST')
 def input_new():
-	count = len(read_diary_all()[0])
-	newdiary = request.forms.get('newdiary')
-	tags = request.forms.get('tags')
-	write_diary_web(newdiary,tags,count)
-	diarylog = read_diary_all()[2]
-	return template("diarysae", diarylog=diarylog)
 
+	keyword = request.forms.get('keyword')
+	username = request.forms.get('username')
+	password = request.forms.get('password')
+	write_diary_web(keyword, username, passwod)
+	return template("passistanSAE")
+
+'''
+#delete function developing
 @app.route('/', method='DELETE')
 def delete():
 	temp = kv.getkeys_by_prefix("key@")
 	for i in temp:
 		kv.delete(i)
+'''
 
+##wechat
 @app.route('/wechat', method = 'POST')
 def response_wechat():
 	'''
 	response in wechat platform
 	'''
 	msg = parse_xml_msg()
-	#msg={'FromUserName': 'omoocpy', 'MsgId': 'hdsicwecewew2233333', 
-	#'ToUserName': 'bambooom', 'Content': 'diary WTF', 'MsgType': 'text', 
-	#'CreateTime': '20151120'}
 
 	response_msg = '''
 	<xml>
@@ -133,20 +155,13 @@ def response_wechat():
 	</xml>
 	'''
 	HELP = '''
-	目前可使用的姿势:
-	- d= # ~吐槽贴个#标签
-	    - 例如"d=cool#nice"
-	    - cool为吐槽,nice为标签
-	    - 标签数可>=1
-	    - 例如"d=a#b#c#d"
-	    - a为吐槽,b/c/d为标签
-	- see    ~吐过的槽
-	- see#  ~吐过#标签的槽
-	    - 例如"see#nice"
-	    - 返回"cool"
-	    - 一次只能看一个标签喔
-	- help  ~怎么吐槽
-	    - 返回姿势指南
+	输入命令提示:
+	- p = 进入关键字,帐号,密码输入界面,请点击开始
+	- l = 列出所以的保存的用户名
+		+ 然后输入数字会现实相应的用户名和密码
+	- 关键字 = 根据关键子找出对于的帐号和密码
+		+ 如: 淘宝: 13456@789.com --> mima987654321
+	- h = help~
 	'''
 
 	if msg['MsgType'] == 'event':
@@ -159,13 +174,13 @@ def response_wechat():
 		pass
 
 
-	if msg['Content'].startswith('d='):
-		raw_diary = msg['Content'][2:]
-		write_diary_wechat(raw_diary)
-		count = len(read_diary_all()[0])
-		echo_str = u"Got! "+str(count)+u"条吐槽啦!"
-	elif msg['Content'] == 'see':
-		echo_str = read_diary_all()[1]
+	if msg['Content'].startswith('p'):
+		pwdinput = msg['Content'][2:]
+		write_diary_wechat(pwdInput)
+		#count = len(read_diary_all()[0])
+		echo_str = u"点击网页,按提示开始输入"
+	elif msg['Content'] == 'l':
+		echo_str = read_all()
 	elif msg['Content'].replace(" ","").startswith('see#'):
 		tags = msg['Content'].replace(" ","")[4:]
 		tags = tags if tags else "Wechat"
