@@ -18,7 +18,7 @@ from bottle import Bottle, request, route, run,template
 import sae
 import sae.kvdb  #database
 import time
-from time import localtime, strftime
+#from time import localtime, strftime
 import hashlib
 import xml.etree.ElementTree as ET
 
@@ -56,7 +56,8 @@ def parse_xml_msg():
 	return msg
 
 ## Below is function code
-def read_diary_all():
+#pwd:password
+def read_pwd_keyword():
 	temp1 = [i[1] for i in list(kv.get_by_prefix("key@"))]
 	temp2 = sorted(temp1, key = lambda x:x['time'])
 	log = [temp2[i]['diary'] for i in range(len(temp2))]
