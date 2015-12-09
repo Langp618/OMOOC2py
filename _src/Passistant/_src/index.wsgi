@@ -82,12 +82,23 @@ def read_all():
 def read_keyword(keyword):
 	temp = [i[1] for i in list(kv.get_by_prefix("key@")) if keyword in i[1]['keyword']]
 	#keys is passowrd
-	keys = [temp[i]['password'] for i in range(len(temp2))]
-	return "\n".join(keys)
+	temp2 = [temp[i]['password'] for i in range(len(temp))]
+	return "\n".join(temp2)
 
+# read the data base on number
+def read_number(number):
+	lists = list(kv.get_by_prefix("key@")
+	temp = [i[number] for i in lists)) if number <len(lists)]
+	
+	return "\n".join(temp)
+
+
+#link to web input the password/username/keyword
+def write_in_web():
+## in developing ##
 '''
-def write_diary_wechat(raw_diary):
-	#raw_diary = raw_diary.replace(" ","") #delete all whitespace
+ # below code as for mvp, below function will develop in future#
+def write_in_web():
 	withtag_diary = raw_diary.split('#') #split diary and tags by #
 	newdiary = withtag_diary[0]
 	if len(withtag_diary) == 1:
@@ -154,15 +165,18 @@ def response_wechat():
 	<Content><![CDATA[%s]]></Content>
 	</xml>
 	'''
+
 	HELP = '''
 	输入命令提示:
 	- p = 进入关键字,帐号,密码输入界面,请点击开始
-	- l = 列出所以的保存的用户名
-		+ 然后输入数字会现实相应的用户名和密码
-	- 关键字 = 根据关键子找出对于的帐号和密码
-		+ 如: 淘宝: 13456@789.com --> mima987654321
+	- l / a = 列出所以的保存的用户名
+		+ a显示全部已保存用户名和密码
+		+ l#1 显示第一组用户名和密码组合
+	- k#关键字 = 根据关键子找出对于的帐号和密码
+		+ 如: k#淘宝: 13456@789.com --> mima987654321
 	- h = help~
 	'''
+
 
 	if msg['MsgType'] == 'event':
 		if msg['Event'] == 'subscribe':
@@ -175,16 +189,18 @@ def response_wechat():
 
 
 	if msg['Content'].startswith('p'):
-		pwdinput = msg['Content'][2:]
-		write_diary_wechat(pwdInput)
-		#count = len(read_diary_all()[0])
+		#pwdinput = msg['Content'][2:]
+		write_in_web()
 		echo_str = u"点击网页,按提示开始输入"
-	elif msg['Content'] == 'l':
+	elif msg['Content'] == 'a':
 		echo_str = read_all()
-	elif msg['Content'].replace(" ","").startswith('see#'):
-		tags = msg['Content'].replace(" ","")[4:]
-		tags = tags if tags else "Wechat"
-		echo_str = read_diary_tags(tags)
+	elif msg['Content'].replace(" ","").startswith('k#'):
+		keyword = msg['Content'].replace(" ","")[2:]
+		# no func to know how to process if the keyword not in kvdb
+		echo_str = read_keyword(keyword)
+	elif msg['Content'].replace(" ","").startswith('l#'):
+		number = int(msg['Content'].replace(" ","")[2:]
+		echo_str = read_number(number)
 	else:
 		echo_str = HELP
 		
