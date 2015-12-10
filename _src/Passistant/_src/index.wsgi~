@@ -79,16 +79,16 @@ def read_all():
 	return temp2 
 
 # based on keyword to read out the password
-def read_by_keyword(key):
-	temp = [i[1] for i in list(kv.get_by_prefix("key@")) if key in i[1]['keyword']]
-	#keys is passowrdy
+def read_keyword(keyword):
+	temp = [i[1] for i in list(kv.get_by_prefix("key@")) if keyword in i[1]['keyword']]
+	#keys is passowrd
 	temp2 = [temp[i]['password'] for i in range(len(temp))]
 	return "\n".join(temp2)
 
 # read the data base on number
-def read_by_number(num):
+def read_number(number):
 	lists = list(kv.get_by_prefix("key@")
-	temp = [i[num] for i in lists)) if num <len(lists)]
+	temp = [i[number] for i in lists)) if number <len(lists)]
 	
 	return "\n".join(temp)
 
@@ -195,12 +195,12 @@ def response_wechat():
 	elif msg['Content'] == 'a':
 		echo_str = read_all()
 	elif msg['Content'].replace(" ","").startswith('k#'):
-		key = msg['Content'].replace(" ","")[2:]
+		keyword = msg['Content'].replace(" ","")[2:]
 		# no func to know how to process if the keyword not in kvdb
-		echo_str = read_by_keyword(key)
+		echo_str = read_keyword(keyword)
 	elif msg['Content'].replace(" ","").startswith('l#'):
-		num = int(msg['Content'].replace(" ","")[2:]
-		echo_str = read_by_number(num)
+		number = int(msg['Content'].replace(" ","")[2:]
+		echo_str = read_number(number)
 	else:
 		echo_str = HELP
 		
