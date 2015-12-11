@@ -38,6 +38,8 @@ def check_signature():
 	L = [token,timestamp,nonce] #those three paramater to 
 	L.sort()
 	s=L[0]+L[1]+L[2]
+	#or:
+	#s = ''.join(L)
 	#tmpstr = "%s%s%s" % tuple(L) #same function
 	if hashlib.sha1(s).hexdigest() == signature:
 		return echostr
@@ -47,7 +49,7 @@ def check_signature():
 def parse_xml_msg():
 	"""
 	code for spliter wechat server post XML data
-	"""
+	""" 
 	recv_xml = request.body.read() #bottle
 	root = ET.fromstring(recv_xml) #Element-tree
 	msg = {}
@@ -60,10 +62,11 @@ def parse_xml_msg():
 {'keyword':keyword,'username':username,'password':password}
 '''
 
-# wechat input 'l', then out all keyword/username list
+# all read out function are show result in //wechat//
+# wechat input 'a', then out all keyword/username list
 # in below define: countkey = "key@" + str(count)
-
-#read out all in wechat, web no read out feature
+# data: 1. keyword, username
+#       2. keyword, username
 def read_all():
 	temp = [i[1] for i in list(kv.get_by_prefix("key@"))]
 	#temp is list of input line [{'key': 'keyword'...}, ... ]
@@ -81,42 +84,21 @@ def read_all():
 # based on keyword to read out the password
 def read_by_keyword(key):
 	temp = [i[1] for i in list(kv.get_by_prefix("key@")) if key in i[1]['keyword']]
-	#keys is passowrdy
 	temp2 = [temp[i]['password'] for i in range(len(temp))]
 	return "\n".join(temp2)
 
 # read the data base on number
 def read_by_number(num):
 	lists = list(kv.get_by_prefix("key@")
-	temp = [i[num] for i in lists)) if num <len(lists)]
-	
+	temp = [i[num] for i in lists)) if num < len(lists)]	
 	return "\n".join(temp)
 
 
-#link to web input the password/username/keyword
-def write_in_web():
-## in developing ##
-'''
- # below code as for mvp, below function will develop in future#
-def write_in_web():
-	withtag_diary = raw_diary.split('#') #split diary and tags by #
-	newdiary = withtag_diary[0]
-	if len(withtag_diary) == 1:
-		tags = ["Wechat"]
-	else:
-		tags = withtag_diary[1:]
-		tags.append("Wechat")
-	
-	count = len(read_diary_all()[0])
-	countkey = "key@" + str(count) # key must be str()
-	edit_time = strftime("%Y %b %d %H:%M", localtime())
-	diary = {'time':edit_time,'diary':newdiary,'tags':tags}
-	kv.set(countkey,diary)
-'''
-
-#write data to kvdb
+#write data to kvdb in web when get CLI 'a' in wechat
 # count is order 
-def write_diary_web(keyword,username,password,count):
+def write_in_web(keyword,username,password):
+	count = len(read_all()[0])
+	count += 1
 	countkey = "key@" + str(count)
 	#edit_time = strftime("%Y %b %d %H:%M", localtime())
 	# line 
@@ -131,12 +113,11 @@ def start():
 	return template("passistantSAE")
 
 @app.route('/', method='POST')
-def input_new():
-
+def write_web():
 	keyword = request.forms.get('keyword')
 	username = request.forms.get('username')
 	password = request.forms.get('password')
-	write_diary_web(keyword, username, passwod)
+	write_in_web(keyword, username, passwod)
 	return template("passistanSAE")
 
 '''
@@ -177,7 +158,6 @@ def response_wechat():
 	- h = help~
 	'''
 
-
 	if msg['MsgType'] == 'event':
 		if msg['Event'] == 'subscribe':
 			echo_str = HELP
@@ -191,6 +171,7 @@ def response_wechat():
 	if msg['Content'].startswith('p'):
 		#pwdinput = msg['Content'][2:]
 		write_in_web()
+		##?? how to connect the web?
 		echo_str = u"点击网页,按提示开始输入"
 	elif msg['Content'] == 'a':
 		echo_str = read_all()
@@ -208,6 +189,5 @@ def response_wechat():
 		msg['FromUserName'],msg['ToUserName'],str(int(time.time())),echo_str)
 	
 	return echo_msg
-
 
 application = sae.create_wsgi_app(app)

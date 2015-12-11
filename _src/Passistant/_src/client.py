@@ -42,16 +42,16 @@ def read_all():
 	return temp2 
 	  
 	# based on keyword to read out the password
-	def read_by_keyword(keyword):
-		temp = [i[1] for i in list(kv.get_by_prefix("key@")) if keyword in i[1]['keyword']]
+	def read_by_keyword(key):
+		temp = [i[1] for i in list(kv.get_by_prefix("key@")) if key in i[1]['keyword']]
 		#keys is passowrd
 		temp2 = [temp[i]['password'] for i in range(len(temp))]
 		return "\n".join(temp2)
 	    
 	# read the data base on number
-	def read_by_mber(number):
+	def read_by_mber(num):
 		lists = list(kv.get_by_prefix("key@")
-		temp = [i[number] for i in lists)) if number <len(lists)]
+		temp = [i[num] for i in lists)) if num <len(lists)]
 		return "\n".join(temp)
 
 def client():
@@ -77,11 +77,11 @@ def client():
 		elif message in ['a','All']:
 			read_all()
 		elif message.startswith('l#'):
-			number = message[2:]
-			read_by_number()
+			num = message[2:]
+			read_by_number(num)
 		elif message.startswith('k#'):
-			keyword = message[2:]
-			read_by_keyword(keyword)
+			key = message[2:]
+			read_by_keyword(key)
 		else:
 			print "Invaild input\n"
 			print HELP
